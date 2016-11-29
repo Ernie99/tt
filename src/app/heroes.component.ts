@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Hero} from "./hero";
 import {HeroService} from "./hero.service";
+import {RouterModule, Router} from "@angular/router";
 
 @Component({
   selector: 'my-heroes',
@@ -64,6 +65,13 @@ import {HeroService} from "./hero.service";
 </ul>
 
 <!--<my-hero-detail [hero]="selectedHero"></my-hero-detail>-->
+<div *ngIf="selectedHero">
+  <h2>
+    {{selectedHero.name | uppercase}} is my hero
+  </h2>
+  <button (click)="gotoDetail()">View Details</button>
+</div>
+
 `
 })
 export class HeroesComponent implements OnInit{
@@ -71,7 +79,7 @@ export class HeroesComponent implements OnInit{
   selectedHero: Hero;
   heroes: Hero[];
 
-  constructor(private heroService: HeroService) {}
+  constructor(private heroService: HeroService, private router: Router) {}
 
   ngOnInit(): void {
     this.getHeroes()
@@ -84,5 +92,9 @@ export class HeroesComponent implements OnInit{
 
   private getHeroes(): void {
     this.heroService.getHeroes().then( heroes => this.heroes = heroes)
+  }
+
+  private gotoDetail(): void{
+    this.router.navigate(['/detail', this.selectedHero.id]);
   }
 }
